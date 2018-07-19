@@ -1,0 +1,3 @@
+rootProject.name = "gradle-atg-runassembler"
+enableFeaturePreview("STABLE_PUBLISHING")
+

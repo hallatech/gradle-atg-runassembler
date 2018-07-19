@@ -1,0 +1,30 @@
+buildscript {
+  repositories {
+    mavenLocal()
+  }
+  dependencies {
+    classpath group: "net.hallatech.atg-runassembler", name: "net.hallatech.atg-runassembler.gradle.plugin", version: "1.0-SNAPSHOT"
+  }
+}
+
+//plugins {
+//  id "net.hallatech.atg-runassembler" version("1.0-SNAPSHOT")
+//}
+
+
+apply plugin: "net.hallatech.atg-runassembler"
+
+runAssembler {
+  storefront {
+    outputFileName = "ATGStorefront.ear"
+  }
+  bcc {
+    outputFileName = "ATGBCC.ear"
+  }
+  csc {
+    outputFileName = "ATGAgent.ear"
+  }
+  lockserver {
+    outputFileName = "ATGLockServer.ear"
+  }
+}
