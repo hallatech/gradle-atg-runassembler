@@ -24,7 +24,7 @@ class TasksListingSpec extends BaseSpecification {
     def result = runGradleTask("tasks")
 
     then:
-    result.output.contains("assembleStorefront")
+    result.output.contains("runAssembleStorefront")
     result.task(":tasks").outcome == SUCCESS
   }
 
@@ -42,14 +42,14 @@ class TasksListingSpec extends BaseSpecification {
     def result = runGradleTask("tasks")
 
     then:
-    result.output.contains("assembleStorefront")
-    result.output.contains("assembleBcc")
-    result.output.contains("assembleCsc")
-    result.output.contains("assembleLockserver")
+    result.output.contains("runAssembleStorefront")
+    result.output.contains("runAssembleBcc")
+    result.output.contains("runAssembleCsc")
+    result.output.contains("runAssembleLockserver")
     result.task(":tasks").outcome == SUCCESS
   }
 
-  def "when multiple assemblies configured assembleAll task is listed  in tasks listing"() {
+  def "when multiple assemblies configured runAssembleAll task is listed  in tasks listing"() {
     given:
     buildFile << """
       runAssembler {
@@ -63,7 +63,7 @@ class TasksListingSpec extends BaseSpecification {
     def result = runGradleTask("tasks")
 
     then:
-    result.output.contains("assembleAll")
+    result.output.contains("runAssembleAll")
     result.task(":tasks").outcome == SUCCESS
   }
 

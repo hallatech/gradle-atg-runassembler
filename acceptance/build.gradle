@@ -17,14 +17,66 @@ apply plugin: "net.hallatech.atg-runassembler"
 runAssembler {
   storefront {
     outputFileName = "ATGStorefront.ear"
+    modules = ["DPS", "DCS", "Ticketing"]
+    layers = ["production"]
+    jboss = true
+    standalone = true
   }
   bcc {
     outputFileName = "ATGBCC.ear"
+    modules = ["DCS.Versioned", "BCC", "SiteAdmin.Versioned", "ContentMgmt.Versioned"]
+    layers = ["bcc", "preview"]
+    standalone = true
   }
   csc {
     outputFileName = "ATGAgent.ear"
+    modules = ["DCS", "Agent"]
+    standalone = true
   }
   lockserver {
     outputFileName = "ATGLockServer.ear"
+    modules = ["DafEar.Admin"]
+    layers = ["production"]
+    standalone = true
+    pack = true
+  }
+  dummy {
+    outputFileName = "Dummy.ear"
+    modules = ["DPS", "DSS", "DCS"]
+    layers = ["prod"]
+    standalone = true
+    overwrite = true
+    collapseClassPath = true
+    collapseExcludeDirs = ["dir1","dir2"]
+    collapseExcludeFiles = ["file1","file2"]
+    jardirs = true
+    verbose = true
+    classesOnly = true
+    liveconfig = true
+    distributable = true
+    excludeAccResources = true
+    nofix = true
+    tomcat = true
+    tomcatUseJotm = true
+    tomcatUseAtomikos = true
+    jboss = true
+    help = true
+    usage = true
+    displayName = "MyTestDummy"
+    server = "MyTestServer"
+    addEarFile = "someearfile.ear"
+    contextRootsFile = "context.roots"
+    dynamoEnvProperties = "dynamo.env"
+    prependJars = ["jar1","jar2","jar3"]
+    tomcatAdditionalResourcesFile = "tomcat.resources"
+    tomcatInitialResourcesFile = "initial.resources"
   }
 }
+
+task acceptanceTests() {
+  group "Acceptance Test"
+  description "Runs acceptance tests for the runAssembler wrapper plugin. ATG11.3 or greater should be installed locally"
+  dependsOn "runAssembleAll"
+}
+
+defaultTasks "acceptanceTests"

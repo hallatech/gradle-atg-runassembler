@@ -2,11 +2,11 @@ package net.hallatech.gradle.plugins
 
 import spock.lang.*
 
-class ATGRunAssemblerWrapperPluginSpec extends Specification {
+class RunAssemblerPluginSpec extends Specification {
 
   def 'runAssembler plugin description'() {
     when:
-    ATGRunAssemblerWrapperPlugin plugin = new ATGRunAssemblerWrapperPlugin()
+    RunAssemblerPlugin plugin = new RunAssemblerPlugin()
     then:
     plugin.DESCRIPTION == "Oracle Commerce (ATG) runAssembler wrapper plugin"
   }
