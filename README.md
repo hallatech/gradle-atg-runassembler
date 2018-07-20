@@ -83,11 +83,9 @@ Options, modules and layers are configured as follows:
 
      runAssembler {
          storefront {
-            options {
-              jboss true
-              standalone true
-              prependJars = ["jar1","jar2"]
-            }
+            jboss = true
+            standalone = true
+            prependJars = ["jar1","jar2"]
             modules = ["DCS","MyBaseModule","MyCommerceModule"]
             layers = ["prod","acceptance","integration","test","ci"]
          }
