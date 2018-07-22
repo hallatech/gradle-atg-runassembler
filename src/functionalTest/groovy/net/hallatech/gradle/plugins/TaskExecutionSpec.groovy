@@ -19,7 +19,7 @@ class TaskExecutionSpec extends BaseSpecification {
       }
 """
     when:
-    def result = runGradleTask("runAssembleStorefront")
+    def result = runGradleTask("runAssembleStorefront","-i")
     then:
     result.output.contains("Assembling ATGStorefront.ear")
     result.task(":runAssembleStorefront").outcome == SUCCESS
@@ -48,7 +48,7 @@ class TaskExecutionSpec extends BaseSpecification {
       }
 """
     when:
-    def result = runGradleTask("runAssembleStorefront","runAssembleBcc","runAssembleCsc","runAssembleLockserver")
+    def result = runGradleTask("runAssembleStorefront","runAssembleBcc","runAssembleCsc","runAssembleLockserver","-i")
     then:
     result.output.contains("Assembling ATGStorefront.ear")
     result.output.contains("Assembling ATGBCC.ear")
@@ -83,7 +83,7 @@ class TaskExecutionSpec extends BaseSpecification {
     }
 """
     when:
-    def result = runGradleTask("runAssembleAll")
+    def result = runGradleTask("runAssembleAll","-i")
     then:
     result.output.contains("Assembling ATGStorefront.ear")
     result.output.contains("Assembling ATGBCC.ear")
@@ -105,7 +105,7 @@ class TaskExecutionSpec extends BaseSpecification {
     when:
     def result = runGradleTask("runAssembleStorefront")
     then:
-    result.output.contains("runAssembler ATGStorefront.ear -m DPS")
+    result.output.contains("ATGStorefront.ear -m DPS")
     result.task(":runAssembleStorefront").outcome == SUCCESS
   }
 
@@ -122,7 +122,7 @@ class TaskExecutionSpec extends BaseSpecification {
     when:
     def result = runGradleTask("runAssembleStorefront")
     then:
-    result.output.contains("runAssembler ATGStorefront.ear -m DPS DSS DCS")
+    result.output.contains("ATGStorefront.ear -m DPS DSS DCS")
     result.task(":runAssembleStorefront").outcome == SUCCESS
   }
 
@@ -140,11 +140,11 @@ class TaskExecutionSpec extends BaseSpecification {
     when:
     def result = runGradleTask("runAssembleStorefront")
     then:
-    result.output.contains("runAssembler ATGStorefront.ear -layer prod -m DPS DSS DCS")
+    result.output.contains("ATGStorefront.ear -layer prod -m DPS DSS DCS")
     result.task(":runAssembleStorefront").outcome == SUCCESS
   }
 
-  def "execute runAssembleStorefront task with all valid options"() {
+  def "execute runAssembleStorefront task with jboss and standalone options"() {
     given:
     buildFile << """
     runAssembler {
@@ -152,46 +152,16 @@ class TaskExecutionSpec extends BaseSpecification {
         outputFileName = "ATGStorefront.ear"
         modules = ["DPS", "DSS", "DCS"]
         layers = ["prod"]
-        standalone = true
-        overwrite = true
-        collapseClassPath = true
-        collapseExcludeDirs = ["dir1","dir2"]
-        collapseExcludeFiles = ["file1","file2"]
-        jardirs = true
-        verbose = true
-        classesOnly = true
-        liveconfig = true
-        distributable = true
-        excludeAccResources = true
-        nofix = true
-        tomcat = true
-        tomcatUseJotm = true
-        tomcatUseAtomikos = true
         jboss = true
-        help = true
-        usage = true
-        displayName = "MyStorefront"
-        server = "MyServer"
-        addEarFile = ["someearfile.ear","asecondfile.ear"]
-        contextRootsFile = "context.roots"
-        dynamoEnvProperties = "dynamo.env"
-        prependJars = ["jar1","jar2","jar3"]
-        tomcatAdditionalResourcesFile = "tomcat.resources"
-        tomcatInitialResourcesFile = "initial.resources"
+        standalone = true
       }
     }
 """
     when:
     def result = runGradleTask("runAssembleStorefront")
     then:
-    result.output.contains("runAssembler -standalone -overwrite -collapse-class-path -collapse-exclude-dirs dir1,dir2"
-        +" -collapse-exclude-files file1,file2 -jardirs -verbose -classesonly -liveconfig -distributable -exclude-acc-resources"
-        +" -nofix -tomcat -tomcat-use-jotm -tomcat-use-atomikos -jboss -help -usage"
-        +" -displayname MyStorefront -server MyServer -add-ear-file someearfile.ear -add-ear-file asecondfile.ear"
-        +" -context-roots-file context.roots"
-        +" -dynamo-env-properties dynamo.env -tomcat-additional-resources-file tomcat.resources"
-        +" -tomcat-initial-resources-file initial.resources -prependJars jar1,jar2,jar3"
-        +" ATGStorefront.ear -layer prod -m DPS DSS DCS")
+    result.output.contains("-standalone -jboss")
+    result.output.contains("ATGStorefront.ear -layer prod -m DPS DSS DCS")
     result.task(":runAssembleStorefront").outcome == SUCCESS
   }
 

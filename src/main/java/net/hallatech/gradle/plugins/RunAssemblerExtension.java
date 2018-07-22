@@ -39,6 +39,8 @@ public class RunAssemblerExtension {
   private String tomcatAdditionalResourcesFile;
   private String tomcatInitialResourcesFile;
 
+  private String targetBuildSubDir = "atg";
+
   public RunAssemblerExtension(String name) { this.name = name; }
 
   public String getName() { return name; }
@@ -220,5 +222,9 @@ public class RunAssemblerExtension {
   public void setTomcatInitialResourcesFile(String tomcatInitialResourcesFile) {
     this.tomcatInitialResourcesFile = tomcatInitialResourcesFile;
   }
+
+  public String getTargetBuildSubDir() { return targetBuildSubDir; }
+
+  public void setTargetBuildSubDir(String targetBuildSubDir) { this.targetBuildSubDir = targetBuildSubDir; }
 
 }

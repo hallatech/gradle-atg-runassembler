@@ -96,7 +96,7 @@ public class RunAssemblerCommandBuilder {
     }
 
     commandList.add(" ");
-    commandList.add(task.getOutputFileName().get());
+    commandList.add(task.getTargetBuildDir() + "/" +task.getOutputFileName().get());
 
     if (task.getLayers().isPresent()) {
       commandList.add(" ");

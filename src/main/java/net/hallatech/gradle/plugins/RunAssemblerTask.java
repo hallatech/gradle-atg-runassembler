@@ -1,15 +1,21 @@
 package net.hallatech.gradle.plugins;
 
 import org.gradle.api.DefaultTask;
+import org.gradle.api.GradleException;
+import org.gradle.api.logging.LogLevel;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class RunAssemblerTask extends DefaultTask {
+  public static final String ATG_HOME = "ATG_HOME";
+
   private final Property<String> outputFileName;
   private final ListProperty<String> modules;
   private final ListProperty<String> layers;
@@ -44,6 +50,9 @@ public class RunAssemblerTask extends DefaultTask {
   private final Property<String> tomcatAdditionalResourcesFile;
   private final Property<String> tomcatInitialResourcesFile;
 
+  private final Property<String> targetBuildSubDir;
+  private File targetBuildDir;
+
 
   public RunAssemblerTask() {
     outputFileName = getProject().getObjects().property(String.class);
@@ -77,6 +86,7 @@ public class RunAssemblerTask extends DefaultTask {
     prependJars = getProject().getObjects().listProperty(String.class);
     tomcatAdditionalResourcesFile = getProject().getObjects().property(String.class);
     tomcatInitialResourcesFile = getProject().getObjects().property(String.class);
+    targetBuildSubDir = getProject().getObjects().property(String.class);
   }
 
   @Input
@@ -143,14 +153,57 @@ public class RunAssemblerTask extends DefaultTask {
 
   public Property<String> getTomcatAdditionalResourcesFile() { return tomcatInitialResourcesFile; }
 
+  public Property<String> getTargetBuildSubDir() { return targetBuildSubDir; }
+
+  public File getTargetBuildDir() { return targetBuildDir; }
 
   @TaskAction
   public void runAssembler() {
-    System.out.println("Assembling " + outputFileName.get());
+    if (getProject().getLogger().isEnabled(LogLevel.INFO)) {
+      getProject().getLogger().info("Assembling " + outputFileName.get());
+    }
 
+    targetBuildDir = getTargetDir();
     List<String> assemblyCommandList = RunAssemblerCommandBuilder.buildAssemblyFromConfiguration(this);
+    runCommand(assemblyCommandList);
+  }
 
-    System.out.println(assemblyCommandList.stream().collect(Collectors.joining()));
+  private File getTargetDir() {
+    String targetFilePath = getProject().getBuildDir().getAbsolutePath() + "/" + getTargetBuildSubDir().get();
+    File targetDir = new File(targetFilePath);
+    if (!targetDir.exists()) targetDir.mkdirs();
+    return targetDir;
+  }
 
+  private final void runCommand(List<String> arguments) {
+    System.out.println(arguments.stream().collect(Collectors.joining()));
+
+    String executable = getAtgHomeEnvVar() + "/home/bin/" + RunAssemblerPlugin.EXECUTABLE_NAME;
+
+    List<String> args = getCommandArguments(arguments);
+
+    getProject().exec( e -> {
+      e.setExecutable(executable);
+      e.setArgs(args);
+    });
+  }
+
+  private List<String> getCommandArguments(List<String> arguments) {
+    List<String> args = new ArrayList<>();
+    arguments.forEach( arg-> {
+      if (!arg.contains(RunAssemblerPlugin.EXECUTABLE_NAME)) {
+        String trimmedArg = arg.trim();
+        if (!trimmedArg.isEmpty()) args.add(trimmedArg);
+      }
+    });
+    return args;
+  }
+
+  private String getAtgHomeEnvVar() {
+    String atgHome = System.getenv(ATG_HOME);
+    if (atgHome.isEmpty()) {
+      throw new GradleException("Expected ATG_HOME environment variable not found.");
+    }
+    return atgHome;
   }
 }

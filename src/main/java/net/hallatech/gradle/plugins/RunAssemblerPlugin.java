@@ -6,7 +6,7 @@ import org.gradle.api.logging.LogLevel;
 public class RunAssemblerPlugin implements Plugin<Project> {
 
   public final static String DESCRIPTION = "Oracle Commerce (ATG) runAssembler wrapper plugin";
-  public final static String OBJECT_NAME = "runAssembler";
+  public final static String EXECUTABLE_NAME = "runAssembler";
   public static final String ATG_GROUP = "ATG";
   public static final String TASK_DESCRIPTION_PREFIX = "Executes ATG runAssembler for the ";
   public static final String TASK_ALL_DESCRIPTION = "Executes ATG runAssembler for all assembly configurations ";
@@ -22,7 +22,7 @@ public class RunAssemblerPlugin implements Plugin<Project> {
 
     NamedDomainObjectContainer<RunAssemblerExtension> runAssemblerExtensionContainer =
         project.container(RunAssemblerExtension.class);
-    project.getExtensions().add(OBJECT_NAME, runAssemblerExtensionContainer);
+    project.getExtensions().add(EXECUTABLE_NAME, runAssemblerExtensionContainer);
 
     configureAssemblerTasks(project, runAssemblerExtensionContainer);
     configureAllAssemblerTask(project);
@@ -81,6 +81,8 @@ public class RunAssemblerPlugin implements Plugin<Project> {
             runAssemblerTask.getPrependJars().set(runAssemblerExtension.getPrependJars());
             runAssemblerTask.getTomcatAdditionalResourcesFile().set(runAssemblerExtension.getTomcatAdditionalResourcesFile());
             runAssemblerTask.getTomcatInitialResourcesFile().set(runAssemblerExtension.getTomcatInitialResourcesFile());
+
+            runAssemblerTask.getTargetBuildSubDir().set(runAssemblerExtension.getTargetBuildSubDir());
 
             RunAssemblerValidator.validate(runAssemblerTask);
           }

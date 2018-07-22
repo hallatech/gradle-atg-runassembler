@@ -27,12 +27,16 @@ The Gradle `tasks` output will look something like this:
 # Execution pre-requisites
 To execute the tasks a local Oracle Commerce (ATG) installation is required. For this plugin the minimum version required is `11.3`, although it should work with previous versions supported on JDK8.  
 The runAssembler utility that this plugin wraps is found at `$ATG_HOME/home/bin/runAssembler|.bat`.
+The ATG_HOME environment variable must also be set.
 
 # Plugin tasks
 
 - A task is generated for each named assembly configuration
 - A wrapper `assembleAll` task is generated that `dependsOn` all others.
 - A `runAssemblyConfigurations` task will display the details of the final configurations.
+
+# Validation
+There are a few simple validation rules applied that match some of the option combinations allowed. If these are violated an exception is thrown with an error message.
 
 # Applying the plugin
 
@@ -99,6 +103,8 @@ The default build tasks are set to `publishtoMavenLocal` and includes functional
 # Functional Testing
 *Functional tests* are split out into their own source set configuration.
 They are implemented using the Gradle TestKit (with Spock).
+*Note* These tests run the actual runAssembler utility so the full scale of all the options is not possible. In addition a valid ATG installation is required. see pre-requisites above.
+
 
 # Acceptance Testing
 A separate non-subproject `acceptance` module uses the plugin in its own gradle build. 

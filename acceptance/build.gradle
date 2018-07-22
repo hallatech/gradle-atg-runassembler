@@ -64,7 +64,7 @@ runAssembler {
     usage = true
     displayName = "MyTestDummy"
     server = "MyTestServer"
-    addEarFile = "someearfile.ear"
+    addEarFile = ["someearfile.ear"]
     contextRootsFile = "context.roots"
     dynamoEnvProperties = "dynamo.env"
     prependJars = ["jar1","jar2","jar3"]
