@@ -7,10 +7,15 @@ plugins {
     id "java-gradle-plugin"
     id "groovy"
     id "maven-publish"
+    id "com.gradle.plugin-publish" version "0.9.10"
 }
 
 group "net.hallatech"
-version "1.0-SNAPSHOT"
+version "0.1"
+
+if (!hasProperty('release') || (hasProperty('release') && release!='true')) {
+    project.version+='-SNAPSHOT'
+}
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -67,4 +72,19 @@ gradlePlugin {
     }
 }
 
+//Configure plugin publishing to the Gradle Plugin portal
+pluginBundle {
+    website = "https://github.com/hallatech/gradle-atg-runassembler"
+    vcsUrl = "https://github.com/hallatech/gradle-atg-runassembler.git"
+    plugins {
+        runAssemblerPlugin {
+            id = "net.hallatech.atg-runassembler"
+            displayName = "ATG runAssembler Wrapper Plugin"
+            description = "Gradle wrapper plugin for the Oracle Commerce ATG runAssembler utility for assembling ATG EARs"
+            tags = ["atg","oracle commerce","runAssembler"]
+        }
+    }
+}
+
+//Default build task configuration
 defaultTasks "publishtoMavenLocal"

@@ -102,8 +102,8 @@ The default build tasks are set to `publishtoMavenLocal` and includes functional
 
 # Functional Testing
 *Functional tests* are split out into their own source set configuration.
-They are implemented using the Gradle TestKit (with Spock).
-*Note* These tests run the actual runAssembler utility so the full scale of all the options is not possible. In addition a valid ATG installation is required. see pre-requisites above.
+They are implemented using the Gradle TestKit (with Spock).  
+*Note* These tests run the actual runAssembler utility so the full scale of all the options is not possible. In addition a valid ATG installation is required. See pre-requisites above.
 
 
 # Acceptance Testing
