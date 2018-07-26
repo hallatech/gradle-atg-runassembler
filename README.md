@@ -43,7 +43,7 @@ There are a few simple validation rules applied that match some of the option co
 To add to your build using the new plugin configuration:
 
     plugins {
-      id "net.hallatech.atg-runassembler" version("1.0")
+      id "net.hallatech.atg-runassembler" version("0.1")
     }
     
 To use the older format:
@@ -53,7 +53,7 @@ To use the older format:
         ...
       }
       dependencies {
-        classpath group: "net.hallatech.atg-runassembler", name: "net.hallatech.atg-runassembler.gradle.plugin", version: "1.0"
+        classpath group: "net.hallatech.atg-runassembler", name: "net.hallatech.atg-runassembler.gradle.plugin", version: "0.1"
       }
     }
     
@@ -95,9 +95,54 @@ Options, modules and layers are configured as follows:
          }
      }
 
+# Custom Task Types
+  RunAssembler - Executes the runAssembler utility
+  
+# Extension Properties
+
+Assembly properties:
+
+Property	| Type	| Default Value	| Matched runAssembler parameter  
+--------  | ----  | ------------- | ------------------------------
+outputFileName*	| String	| none	| -output-file-name  
+modules*	| List	| none |	-m 
+layers	| List	| none	| -layer  
+
+Options appear at the same level as modules and layers - they don't have their own closure block.  
+
+Property	| Type	| Default Value	| Matched runAssembler parameter  
+--------  | ----  | ------------- | ------------------------------
+pack | boolean | false | -pack
+standalone | boolean | false | -standalone
+overwrite | boolean | false | -overwrite
+collapseClassPath | boolean| false | -collapse-class-path
+collapseExcludeDirs | List<String>  | [] | -collapse-exclude-dirs
+collapseExcludeFiles | List<String> | [] | -collapse-exclude-files
+jardirs | boolean | false | -jardirs
+verbose | boolean | false | -verbose
+classesOnly | boolean | false | -classesonly
+displayName | String | '' | -displayname <name>
+serverName | String | '' | -server
+liveconfig | boolean | false | -liveconfig
+distributable | boolean | false | -distributable
+addEarFile | List<String> | [] | -add-ear-file <EAR file name>
+contextRootsFile | String | '' | -context-roots-file <properties file>
+dynamoEnvProperties | String | '' | -dynamo-env-properties <properties file>
+excludeAccResources | boolean | false | -exclude-acc-resources
+noFix | boolean | false | -nofix
+prependJars | List<String> | [] | -prependJars <jar1,jar2,...>
+runInPlace | boolean | false | -run-in-place
+tomcat | boolean | false | -tomcat
+tomcatAdditionalResourcesFile | String | false | -tomcat-additional-resources-file <fileName>
+tomcatInitialResourcesFile | String | false | -tomcat-initial-resources-file <fileName>
+tomcatUseJotm | boolean | false | -tomcat-use-jotm
+tomcatUseAtomikos | boolean | false | -tomcat-use-atomikos
+jboss | boolean | false | -jboss
+help | boolean | false | -help
+usage | boolean | false | -usage
+ 
 # Build
 
-The build configuration uses the Groovy DSL rather than Kotlin script - one step at a time!
 The default build tasks are set to `publishtoMavenLocal` and includes functional tests.
 
 # Functional Testing
@@ -116,5 +161,15 @@ It uses the version of the plugin that is in the local Maven repository when the
 It doesn't have its own automated tests but its just for running via the command line. There is a wrapper tasks `acceptanceTests` which calls the main or wrapper tasks of the plugin. This is configured for the defaultTasks,
 
 Simply run `gradle` or `./gradlew` to execute all the tasks of the plugin.
+
+# Publishing
+The default task is build plus a local maven install so that the functional tests can immediately be executed.
+
+To publish to the gradle plugin portal:
+
+- Ensure versions are correct
+- Ensure README notes versions match publishing versions
+- Ensure functional and acceptance test versions matches publishing versions
+- Run `gradle clean build publishPlugins -Prelease=true` to publish to the gradle plugin portal. If you don't add -Prelease=true a SNAPSHOT version will be released
 
     
